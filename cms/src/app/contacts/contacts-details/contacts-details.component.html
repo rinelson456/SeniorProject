@@ -1,17 +1,17 @@
 <div class="row">
     <div class="col-xs-4  panel panel-default">
         <div class="panel-heading clearfix">
-            <h4 class="list-group-item-heading"></h4>
+            <h4 class="list-group-item-heading">{{ contacts.name }}</h4>
             <span>
-                <img src="" alt="" class="img-responsive" style="max-height: 50px;">
+                <img [src]="contacts.imagePath" alt="{{ contacts.name }}" class="img-responsive" style="max-height: 50px;">
             </span>
             <button class="btn btn-success pull-right btn-danger">Delete</button>
             <button class="btn btn-success pull-right btn-primary">Edit</button>
         </div>
         <div class="panel-body">
             <div class="pull-left">
-                <h4>Email:</h4>
-                <h4>Phone:</h4>
+                <h4>Email: {{ contacts.email }}</h4>
+                <h4>Phone: {{ contacts.phone }}</h4>
             </div>
         </div>
     </div>
