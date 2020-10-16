@@ -10,7 +10,6 @@ import { Component, EventEmitter, Output } from '@angular/core';
 
      onSelect(feature: string){
          this.featureSelected.emit(feature);
-
      }
 
  }
