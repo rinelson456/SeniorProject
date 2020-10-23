@@ -5,8 +5,8 @@
             <span>
                 <img [src]="contacts.imagePath" alt="{{ contacts.name }}" class="img-responsive" style="max-height: 50px;">
             </span>
-            <button class="btn btn-success pull-right btn-danger">Delete</button>
-            <button class="btn btn-success pull-right btn-primary">Edit</button>
+            <a class="btn btn-success pull-right btn-danger" (click)="onDelete()">Delete</a>
+            <a class="btn btn-success pull-right btn-primary" (click)="onEditContact()">Edit</a>
         </div>
         <div class="panel-body">
             <div class="pull-left">

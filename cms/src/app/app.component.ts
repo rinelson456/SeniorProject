@@ -6,9 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'profileProject';
-  loadedFeature = 'document'
-  onNavigate(feature: string){
-    this.loadedFeature = feature;
-  }
+  title = 'WeLearn CMS!';
 }
