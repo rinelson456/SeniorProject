@@ -31,7 +31,6 @@ export class ContactsService {
   }
 
   retrieveContact(index: number){
-    console.log('here')
     return this.contacts[index];
   }
 
@@ -70,7 +69,7 @@ export class ContactsService {
   
       newContact.id = originalContact.id
       this.contacts[pos] = newContact
-      const ContactsListClone = this.contacts.slice()
-      this.contactChangedEvent.next(ContactsListClone)
+      const contactsListClone = this.contacts.slice()
+      this.contactChangedEvent.next(contactsListClone)
     }
 }

@@ -14,7 +14,7 @@ export class DocumentListComponent implements OnInit, OnDestroy{
 
   documents: Document[] = [];
 
-  constructor(private documentService: DocumentsService, private router: Router, private route: ActivatedRoute) { }
+  constructor(private documentService: DocumentsService) { }
 
   ngOnInit(): void {
     this.documents = this.documentService.getContacts();
@@ -23,9 +23,10 @@ export class DocumentListComponent implements OnInit, OnDestroy{
         this.documents = documents;
       }
     );
-  }
+    }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
+
 }
