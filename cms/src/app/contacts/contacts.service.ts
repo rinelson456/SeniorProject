@@ -21,7 +21,7 @@ export class ContactsService {
     return this.contacts.sort((a, b) => a.name > b.name ? 1 : b.name > a.name ? -1 : 0).slice();
   }
 
-  getContact(id: string): Contacts{
+  getContact(id: number): Contacts{
     for(let contact of this.contacts){
       if(contact.id === id){
         return contact;
@@ -51,7 +51,7 @@ export class ContactsService {
         return
       }
       this.maxContactId++
-      newContact.id = this.maxContactId.toString()
+      newContact.id = this.maxContactId
       this.contacts.push(newContact);
       const contactsListClone = this.contacts.slice()
       this.contactChangedEvent.next(contactsListClone)
@@ -66,9 +66,10 @@ export class ContactsService {
       if(pos < 0){
         return
       }
+
   
       newContact.id = originalContact.id
-      this.contacts[pos] = newContact
+      this.contacts[newContact.id] = newContact
       const contactsListClone = this.contacts.slice()
       this.contactChangedEvent.next(contactsListClone)
     }

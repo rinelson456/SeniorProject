@@ -11,7 +11,7 @@ export class MessageEditComponent implements OnInit {
   @ViewChild('subjectInput') subjectInputRef: ElementRef;
   @ViewChild('msgText') msgTextRef: ElementRef;
   @Input() message: Message;
-  currentSender = '1';
+  currentSender = 1;
   id = '1';
 
   constructor(private messageService: MessagesService) { }

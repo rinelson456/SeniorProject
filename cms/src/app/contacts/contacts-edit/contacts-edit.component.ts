@@ -26,7 +26,7 @@ export class ContactsEditComponent implements OnInit {
         this.editMode = false;
         return
       }
-      const index = JSON.stringify(this.id)
+      const index = this.id
       this.originalContact = this.contactService.getContact(index)
       if (this.originalContact == null){
         return
@@ -39,15 +39,14 @@ export class ContactsEditComponent implements OnInit {
 
   onSubmit(form: NgForm){
     const value = form.value;
-    const id = JSON.stringify(this.id)
+    const id = this.id;
     let group = null;
-    console.log(value.name)
-    const newDocument = new Contacts(value.name, value.email, value.imageUrl, id, value.phone, group);
+    const newContact = new Contacts(value.name, value.email, value.imageUrl, id, value.phone, group);
     console.log(this.editMode)
     if(this.editMode == true){
-      this.contactService.updateContact(this.originalContact, newDocument)
+      this.contactService.updateContact(this.originalContact, newContact)
     } else{
-      this.contactService.addContact(newDocument);
+      this.contactService.addContact(newContact);
     }
     this.onCancel()
   }
