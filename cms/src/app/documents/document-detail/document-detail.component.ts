@@ -24,7 +24,8 @@ export class DocumentDetailComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe((params: Params)=> {
       this.id = +params['id'];
-      this.document = this.documentService.getDocument(this.id);
+      this.document = this.documentService.getDocuments(this.id);
+      console.log(this.document)
     });
   }
 
@@ -33,6 +34,7 @@ export class DocumentDetailComponent implements OnInit {
   }
 
   onView(){
+    console.log(this.document)
     if(this.document.url){
       this.nativeWindow.open(this.document.url)
     }

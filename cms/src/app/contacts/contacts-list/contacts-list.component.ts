@@ -9,7 +9,8 @@ import { ContactsService } from '../contacts.service';
   templateUrl: './contacts-list.component.html',
   styleUrls: ['./contacts-list.component.css']
 })
-export class ContactsListComponent implements OnInit, OnDestroy{                              
+export class ContactsListComponent implements OnInit, OnDestroy{
+  term: string;                              
   contacts: Contacts[] = [];
   private subscription: Subscription;
   constructor(private contactService: ContactsService) { }
@@ -19,9 +20,14 @@ export class ContactsListComponent implements OnInit, OnDestroy{
     this. subscription = this.contactService.contactChangedEvent.subscribe(
       (contacts: Contacts[]) => {
         this.contacts = contacts;
-        console.log(contacts)
       }
     );
+  }
+
+  search(value: string) {
+
+    this.term = value;
+    
   }
 
   ngOnDestroy(): void {
