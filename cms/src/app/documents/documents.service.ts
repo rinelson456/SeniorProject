@@ -33,7 +33,7 @@ export class DocumentsService {
 
   getDocument(){
     this.http
-      .get<Document[]>('https://wdd430cms.firebaseio.com/documents.json').subscribe(
+      .get<Document[]>('http://localhost:3000/documents').subscribe(
         // success method
         (documents: Document[] ) => {
            this.documents = documents
@@ -51,16 +51,24 @@ export class DocumentsService {
   }
 
   deleteDocument(document: Document) {
-  if (!document) {
-     return;
-  }
-  const pos = this.documents.indexOf(document);
-  if (pos < 0) {
-     return;
-  }
-  this.documents.splice(pos, 1);
-  const documentsListClone = this.documents.slice()
-  this.storeDocuments()
+
+    if (!document) {
+      return;
+    }
+
+    const pos = this.documents.findIndex(d => d.id === document.id);
+
+    if (pos < 0) {
+      return;
+    }
+
+    // delete from database
+    this.http.delete('http://localhost:3000/documents/' + document.id)
+      .subscribe(
+        (response: Response) => {
+          this.documents.splice(pos, 1);
+        }
+      );
   }
 
   getMaxId(): number {
@@ -75,31 +83,52 @@ export class DocumentsService {
     }
     return maxId
   }
-  addDocument(newDocument: Document) {
-    if(newDocument === undefined){
-      return
+  addDocument(document: Document) {
+    if (!document) {
+      return;
     }
-    this.maxDocumentId++
-    newDocument.id = this.maxDocumentId.toString()
-    this.documents.push(newDocument);
-    const documentsListClone = this.documents.slice()
-    this.storeDocuments()
+
+    // make sure id of the new Document is empty
+    document.id = '';
+
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+
+    // add to database
+    this.http.post<{ message: string, document: Document }>('http://localhost:3000/documents',
+      document,
+      { headers: headers })
+      .subscribe(
+        (responseData) => {
+          // add new document to documents
+          this.documents.push(responseData.document);
+        }
+      );
   }
 
   updateDocument(originalDocument: Document, newDocument: Document) {
-    if(originalDocument == undefined){
-      return
+    if (!originalDocument || !newDocument) {
+      return;
     }
 
-    const pos = this.documents.indexOf(originalDocument)
-    if(pos < 0){
-      return
+    const pos = this.documents.findIndex(d => d.id === originalDocument.id);
+
+    if (pos < 0) {
+      return;
     }
 
-    newDocument.id = originalDocument.id
-    this.documents[pos] = newDocument
-    const documentsListClone = this.documents.slice()
-    this.storeDocuments()
+    // set the id of the new Document to the id of the old Document
+    newDocument.id = originalDocument.id;
+
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+
+    // update database
+    this.http.put('http://localhost:3000/documents/' + originalDocument.id,
+      newDocument, { headers: headers })
+      .subscribe(
+        (response: Response) => {
+          this.documents[pos] = newDocument;
+        }
+      );
   }
 
   storeDocuments(){

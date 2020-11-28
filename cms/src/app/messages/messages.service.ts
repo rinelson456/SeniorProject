@@ -37,10 +37,26 @@ export class MessagesService {
     return null
   }
 
-  addMessage(messages: Message){
-    this.messages.push(messages);
-    this.messagesChanged.emit(this.messages.slice());
-    this.storeMessages();
+  addMessage(message: Message){
+    if (!message) {
+      return;
+    }
+
+    // make sure id of the new Message is empty
+    message.id = '';
+
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+
+    // add to database
+    this.http.post<{ message: string, messages: Message }>('http://localhost:3000/messages',
+      message,
+      { headers: headers })
+      .subscribe(
+        (responseData) => {
+          // add new message to messages
+          this.messages.push(responseData.messages);
+        }
+      );
   }
 
   getMessages(){

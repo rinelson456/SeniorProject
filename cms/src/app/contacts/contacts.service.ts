@@ -62,42 +62,68 @@ export class ContactsService {
 
   deleteContact(contact: Contacts) {
     if (!contact) {
-       return;
+      return;
     }
-    const pos = this.contacts.indexOf(contact);
+
+    const pos = this.contacts.findIndex(c => c.id === contact.id);
+
     if (pos < 0) {
-       return;
+      return;
     }
-    this.contacts.splice(pos, 1);
-    const contactsListClone = this.contacts.slice()
-    this.storeContacts()
+
+    // delete from database
+    this.http.delete('http://localhost:3000/contacts/' + contact.id)
+      .subscribe(
+        (response: Response) => {
+          this.contacts.splice(pos, 1);
+        }
+      );
     }
-    addContact(newContact: Contacts) {
-      if(newContact === undefined){
+    addContact(contact: Contacts) {
+      if(!contact){
         return
       }
-      this.maxContactId++
-      newContact.id = this.maxContactId
-      this.contacts.push(newContact);
-      const contactsListClone = this.contacts.slice()
-      this.storeContacts()
+          // make sure id of the new Contact is empty
+          contact.id = 0;
+  
+          const headers = new HttpHeaders({'Content-Type': 'application/json'});
+      
+          // add to database
+          this.http.post<{ message: string, contact: Contacts }>('http://localhost:3000/contacts',
+          contact,
+            { headers: headers })
+            .subscribe(
+              (responseData) => {
+                // add new contact to contacts
+                this.contacts.push(responseData.contact);
+              }
+            );
     }
   
     updateContact(originalContact: Contacts, newContact: Contacts) {
-      if(originalContact == undefined){
-        return
+      if (!originalContact || !newContact) {
+        return;
       }
   
-      const pos = this.contacts.indexOf(originalContact)
-      if(pos < 0){
-        return
+      const pos = this.contacts.findIndex(d => d.id === originalContact.id);
+  
+      if (pos < 0) {
+        return;
       }
-
-      console.log('here'+originalContact.id)
-      newContact.id = originalContact.id
-      this.contacts[newContact.id] = newContact
-      const contactsListClone = this.contacts.slice()
-      this.storeContacts()
+  
+      // set the id of the new Contact to the id of the old Contact
+      newContact.id = originalContact.id;
+  
+      const headers = new HttpHeaders({'Content-Type': 'application/json'});
+  
+      // update database
+      this.http.put('http://localhost:3000/contactss/' + originalContact.id,
+        newContact, { headers: headers })
+        .subscribe(
+          (response: Response) => {
+            this.contacts[pos] = newContact;
+          }
+        );
     }
 
     storeContacts(){
