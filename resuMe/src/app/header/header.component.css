@@ -1,0 +1,9 @@
+div {
+    background-color: rgb(109, 182, 0);
+}
+
+a {
+    color: white;
+    border-width: 5px;
+    border-color: black;
+}

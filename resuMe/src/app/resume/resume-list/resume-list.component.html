@@ -1,0 +1,11 @@
+<div class="row">
+    <div class="col-xs-12">
+        <button class="btn btn-success" (click)="onNewResume()">New Resume Item</button>
+    </div>
+    <hr>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <app-resume-item *ngFor="let resumeEl of resumes; let i = index" [resume]="resumeEl" [index]="i"></app-resume-item>
+    </div>
+</div>
