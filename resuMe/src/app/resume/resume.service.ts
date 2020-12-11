@@ -2,6 +2,7 @@ import {  Injectable, EventEmitter } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { Resume } from './resume.model';
+import { stringify } from 'querystring';
 
 @Injectable()
 export class ResumeService {
@@ -30,10 +31,11 @@ export class ResumeService {
 
       getResumes(): Resume[] {
         this.http
-          .get<Resume[]>('http://localhost:3000/resume').subscribe(
+          .get<Resume[]>('http://localhost:3000/resumes').subscribe(
             // success method
             (resumes: Resume[] ) => {
-               this.resumes = resumes
+              const resume = JSON.stringify(resumes);
+               this.resumes = JSON.parse(resume)
                this.resumeChanged.next(this.resumes.slice())
             },
             // error method
@@ -68,7 +70,7 @@ export class ResumeService {
         }
     
         // delete from database
-        this.http.delete('http://localhost:3000/resume/' + resume.id)
+        this.http.delete('http://localhost:3000/resumes' + resume.id)
           .subscribe(
             (response: Response) => {
               this.resumes.splice(pos, 1);
@@ -85,7 +87,7 @@ export class ResumeService {
               const headers = new HttpHeaders({'Content-Type': 'application/json'});
           
               // add to database
-              this.http.post<{ message: string, resume: Resume }>('http://localhost:3000/resume/',
+              this.http.post<{ message: string, resume: Resume }>('http://localhost:3000/resumes',
               resume,
                 { headers: headers })
                 .subscribe(
@@ -113,7 +115,7 @@ export class ResumeService {
           const headers = new HttpHeaders({'Content-Type': 'application/json'});
       
           // update database
-          this.http.put('http://localhost:3000/resume/' + originalResume.id,
+          this.http.put('http://localhost:3000/resumes' + originalResume.id,
             newResume, { headers: headers })
             .subscribe(
               (response: Response) => {
@@ -128,7 +130,7 @@ export class ResumeService {
       
           const headers = new HttpHeaders();
           headers.set('Content-Type', 'application/json; charset=utf-8');
-          this.http.put('http://localhost:3000/resume/', resumes, {headers: headers}).subscribe(
+          this.http.put('http://localhost:3000/resumes', resumes, {headers: headers}).subscribe(
               () => {
                 this.resumeChanged.next(this.resumes.slice())
               }

@@ -24,6 +24,20 @@ app.use('/resume', messageRoutes);
 // app.use('/contacts', contactRoutes);
 // app.use('/documents', documentRoutes);
 
+// Add support for CORS
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader(
+        'Access-Control-Allow-Headers',
+        'Origin, X-Requested-With, Content-Type, Accept'
+    );
+    res.setHeader(
+        'Access-Control-Allow-Methods',
+        'GET, POST, PATCH, PUT, DELETE, OPTIONS'
+    );
+    next();
+});
+
 // establish a connection to the mongo database
 mongoose.connect('mongodb://localhost:27017/resuMe', { useNewUrlParser: true }, (err, res) => {
     if (err) {
@@ -42,19 +56,6 @@ app.use(cookieParser());
 
 app.use(logger('dev')); // Tell express to use the Morgan logger
 
-// Add support for CORS
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader(
-        'Access-Control-Allow-Headers',
-        'Origin, X-Requested-With, Content-Type, Accept'
-    );
-    res.setHeader(
-        'Access-Control-Allow-Methods',
-        'GET, POST, PATCH, PUT, DELETE, OPTIONS'
-    );
-    next();
-});
 
 // Tell express to use the specified director as the
 // root directory for your web site

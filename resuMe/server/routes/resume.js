@@ -27,8 +27,10 @@ router.post('/', (req, res, next) => {
     const resume = new Resume({
         id: maxResumeId,
         name: req.body.name,
-        description: req.body.description,
-        role: req.body.role
+        description: body.description,
+        role: body.role,
+        date: body.date
+
     });
 
     resume.save()
@@ -77,7 +79,7 @@ router.put('/:id', (req, res, next) => {
 router.delete("/:id", (req, res, next) => {
     Resume.findOne({ id: req.params.id })
         .then(resume => {
-            Resume.deleteOne({ id: req.params.id })
+            resume.deleteOne({ id: req.params.id })
                 .then(result => {
                     res.status(204).json({
                         message: "Resume deleted successfully"
