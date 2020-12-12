@@ -1,1 +1,21 @@
-<p>resume-details works!</p>
+<div class="row">
+    <div class="col-xs-4  panel panel-default">
+        <div class="panel-heading clearfix">
+            <h4 class="list-group-item-heading">{{ resumes.name }}</h4>
+            <a class="btn btn-success pull-right btn-danger" (click)="onDelete()">Delete</a>
+            <a class="btn btn-success pull-right btn-primary" (click)="onEditResume()">Edit</a>
+        </div>
+        <div class="panel-body">
+            <div class="pull-left">
+                <h4>Description: {{ resumes.description }}</h4>
+                <h4>Date: {{ resumes.date }}</h4>
+                <h4>Role: {{ resumes.role }}</h4>
+            </div>
+        </div>
+    </div>
+    <hr>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+    </div>
+</div>

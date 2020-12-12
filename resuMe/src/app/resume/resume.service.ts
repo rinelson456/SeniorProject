@@ -27,6 +27,7 @@ export class ResumeService {
             }
         }
         return maxId
+
       }
 
       getResumes() {
@@ -45,10 +46,12 @@ export class ResumeService {
       }
     
       getResume(id: number): Resume{
+        let count = 0
         for(let resume of this.resumes){
-          if(resume.id === id){
+          if( count === id){
             return resume;
           }
+          count++
         }
         return null
       }
@@ -69,10 +72,11 @@ export class ResumeService {
         }
     
         // delete from database
-        this.http.delete('http://localhost:3000/resumes' + resume.id)
+        this.http.delete('http://localhost:3000/resumes/' + resume.id)
           .subscribe(
             (response: Response) => {
               this.resumes.splice(pos, 1);
+              this.resumeChanged.next(this.resumes.slice())
             }
           );
         }
@@ -93,6 +97,7 @@ export class ResumeService {
                   (responseData) => {
                     // add new resume to resumes
                     this.resumes.push(responseData.resume);
+                    this.resumeChanged.next(this.resumes.slice())
                   }
                 );
         }
@@ -103,22 +108,26 @@ export class ResumeService {
           }
       
           const pos = this.resumes.findIndex(d => d.id === originalResume.id);
-      
           if (pos < 0) {
             return;
           }
       
           // set the id of the new Resume to the id of the old Resume
           newResume.id = originalResume.id;
+          const resume: Resume = newResume;
       
           const headers = new HttpHeaders({'Content-Type': 'application/json'});
       
           // update database
-          this.http.put('http://localhost:3000/resumes' + originalResume.id,
+          this.http.put('http://localhost:3000/resumes/' + originalResume.id,
             newResume, { headers: headers })
             .subscribe(
               (response: Response) => {
-                this.resumes[pos] = newResume;
+                const updatedResumes = [...this.resumes];
+                const oldResumeIndex = updatedResumes.findIndex(r => r.id === resume.id);
+                updatedResumes [oldResumeIndex] = resume;
+                this.resumes = updatedResumes;
+                this.resumeChanged.next(this.resumes.slice())
               }
             );
         }

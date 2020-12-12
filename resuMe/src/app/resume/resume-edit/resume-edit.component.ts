@@ -27,6 +27,7 @@ export class ResumeEditComponent implements OnInit {
       }
       const index = this.id
       this.originalResume = this.resumeService.getResume(index)
+      console.log(this.originalResume)
       if (this.originalResume == null){
         return
       }
@@ -36,15 +37,11 @@ export class ResumeEditComponent implements OnInit {
       })
   }
 
-  get controls() {
-    return (<FormArray>this.resumeForm.get('ingredients')).controls;
-  }
-
   onSubmit(form: NgForm){
+    console.log(this.editMode)
     const value = form.value;
     const id = this.id;
-    let group = null;
-    const newResume = new Resume(value.name, value.email, value.imageUrl, id, value.phone,);
+    const newResume = new Resume(value.name, value.date, value.role, id, value.description,);
     if(this.editMode == true){
       this.resumeService.updateResume(this.originalResume, newResume)
     } else{

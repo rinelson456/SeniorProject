@@ -4,7 +4,7 @@ var router = express.Router();
 const sequenceGenerator = require('./sequenceGenorator');
 const app = express();
 
-// app.use(bodyParser.json());
+router.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({ extended: false }));
 
 const Resume = require('../models/resume');
@@ -36,8 +36,6 @@ router.post('/', (req, res, next) => {
         date: req.body.date,
         role: req.body.role
     });
-
-    console.log(resume)
 
     resume.save()
         .then(createdResume => {
