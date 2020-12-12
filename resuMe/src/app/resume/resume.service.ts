@@ -29,20 +29,19 @@ export class ResumeService {
         return maxId
       }
 
-      getResumes(): Resume[] {
+      getResumes() {
         this.http
-          .get<Resume[]>('http://localhost:3000/resumes').subscribe(
+          .get<{message: string, resumes: Resume[]}>('http://localhost:3000/resumes').subscribe(
             // success method
-            (resumes: Resume[] ) => {
-              const resume = JSON.stringify(resumes);
-               this.resumes = JSON.parse(resume)
+            (resumesData) => { 
+               this.resumes = resumesData.resumes
                this.resumeChanged.next(this.resumes.slice())
             },
             // error method
             (error: any) => {
                console.log(error)
             });
-        return this.resumes.sort((a, b) => a.name > b.name ? 1 : b.name > a.name ? -1 : 0).slice();
+        return this.resumes.slice();
       }
     
       getResume(id: number): Resume{

@@ -8,21 +8,6 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var app = express(); // create an instance of express
-// import the routing file to handle the default (index) route
-var index = require('./server/routes/app');
-
-// ... ADD CODE TO IMPORT YOUR ROUTING FILES HERE ...
-const messageRoutes = require('./server/routes/resume');
-// const contactRoutes = require('./server/routes/applications');
-// const documentRoutes = require('./server/routes/schedule');
-
-// Tell express to map the default route ('/') to the index route
-app.use('/', index);
-
-// // ... ADD YOUR CODE TO MAP YOUR URL'S TO ROUTING FILES HERE ...
-app.use('/resume', messageRoutes);
-// app.use('/contacts', contactRoutes);
-// app.use('/documents', documentRoutes);
 
 // Add support for CORS
 app.use((req, res, next) => {
@@ -37,6 +22,21 @@ app.use((req, res, next) => {
     );
     next();
 });
+// import the routing file to handle the default (index) route
+var index = require('./server/routes/app');
+
+// ... ADD CODE TO IMPORT YOUR ROUTING FILES HERE ...
+const resumeRoutes = require('./server/routes/resumes');
+// const contactRoutes = require('./server/routes/applications');
+// const documentRoutes = require('./server/routes/schedule');
+
+// Tell express to map the default route ('/') to the index route
+app.use('/', index);
+
+// // ... ADD YOUR CODE TO MAP YOUR URL'S TO ROUTING FILES HERE ...
+app.use('/resumes', resumeRoutes);
+// app.use('/contacts', contactRoutes);
+// app.use('/documents', documentRoutes);
 
 // establish a connection to the mongo database
 mongoose.connect('mongodb://localhost:27017/resuMe', { useNewUrlParser: true }, (err, res) => {

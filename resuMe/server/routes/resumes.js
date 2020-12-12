@@ -1,6 +1,12 @@
+const bodyParser = require("body-parser")
 var express = require('express');
 var router = express.Router();
 const sequenceGenerator = require('./sequenceGenorator');
+const app = express();
+
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: false }));
+
 const Resume = require('../models/resume');
 
 module.exports = router;
@@ -9,8 +15,7 @@ router.get('/', (req, res, next) => {
     Resume.find()
         .then(resumes => {
             res.status(200).json({
-                message: 'Resumes fetched successfully!',
-                resumes: resumes,
+                resumes: resumes
             });
         })
         .catch(error => {
@@ -27,11 +32,12 @@ router.post('/', (req, res, next) => {
     const resume = new Resume({
         id: maxResumeId,
         name: req.body.name,
-        description: body.description,
-        role: body.role,
-        date: body.date
-
+        description: req.body.description,
+        date: req.body.date,
+        role: req.body.role
     });
+
+    console.log(resume)
 
     resume.save()
         .then(createdResume => {
@@ -53,7 +59,8 @@ router.put('/:id', (req, res, next) => {
         .then(resume => {
             resume.name = req.body.name;
             resume.description = req.body.description;
-            resume.url = req.body.url;
+            resume.date = req.body.date;
+            resume.role = req.body.role;
 
             resume.updateOne({ id: req.params.id }, resume)
                 .then(result => {

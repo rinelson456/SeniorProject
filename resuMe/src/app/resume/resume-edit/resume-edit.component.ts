@@ -45,7 +45,6 @@ export class ResumeEditComponent implements OnInit {
     const id = this.id;
     let group = null;
     const newResume = new Resume(value.name, value.email, value.imageUrl, id, value.phone,);
-    console.log(this.editMode)
     if(this.editMode == true){
       this.resumeService.updateResume(this.originalResume, newResume)
     } else{
