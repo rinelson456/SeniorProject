@@ -37,5 +37,11 @@ export class ShoppingListService {
         this.ingredients.splice(index, 1);
         this.ingredientsChanged.next(this.ingredients.slice());
     }
+
+    setIngredients(ingredients: Ingredient[]){
+        this.ingredients = ingredients; 
+        console.log(this.ingredients)
+        this.ingredientsChanged.next(this.ingredients.slice());
+    }
      
 }

@@ -1,3 +1,4 @@
+import { HttpClient, HttpHeaders, HttpParams, HttpRequest } from '@angular/common/http';
 import {  Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Ingredient } from '../Shared/ingredient.model';
@@ -8,14 +9,10 @@ import { Recipe } from './recipe.model';
 export class RecipeService {
     recipesChanged = new Subject<Recipe[]>();
     // private recipes: Recipe[];
+    private ingredient: Ingredient[];
 
-    private recipes: Recipe[] = [new Recipe('Burger', 'Great Burger', 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSCstGnwN8sGGaLNG9i02mRyKsTs0F_Eb_GaQ&usqp=CAU', 
-        [ new Ingredient('Meat', 1), 
-            new Ingredient('French Fries', 20)]),
-                                new Recipe('Hot Dog', 'Great Hotdog', 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSCstGnwN8sGGaLNG9i02mRyKsTs0F_Eb_GaQ&usqp=CAU', 
-                                    [ new Ingredient('Buns', 2),
-                                    new Ingredient('Meat', 1)])];
-    constructor(private slService: ShoppingListService) {
+    private recipes: Recipe[] = [];
+    constructor(private slService: ShoppingListService, private http: HttpClient) {
     }
 
     setRecipes(recipes: Recipe[]){
@@ -23,13 +20,40 @@ export class RecipeService {
         console.log(this.recipes)
         this.recipesChanged.next(this.recipes.slice());
     }
+
     
-    getRecipes() {
-        return this.recipes.slice();
+    getRecipes(currentPage: number){
+        this.ingredient = this.slService.getIngredients();
+        let ingredientArray: any[] = [];
+        for(let j= 0; j < this.ingredient.length; j++){
+            ingredientArray[j] = this.ingredient[j].name
+        }
+        const queryParams = `?i=${ingredientArray}&page=${currentPage}`;
+        return this.http
+        .get('http://localhost:3000/recipes/' + queryParams).subscribe(
+            // success method
+            (recipes: any[] ) => {
+              let recipeString = JSON.stringify(recipes);
+              let parse = JSON.parse(recipeString);
+              for(let i = 0; i < 10; i++){
+                this.recipes[i] = ({
+                  name: parse.results[i].title,
+                  description: parse.results[i].href,
+                  imagePath: parse.results[i].thumbnail,
+                  ingredients: parse.results[i].ingredients
+                }); 
+                this.recipesChanged.next(this.recipes.slice()); 
+              }     
+          },
+            // error method
+            (error: any) => {
+               console.log(error);
+            }); 
     }
 
 
     getRecipe(index: number){
+        console.log(this.recipes)
         return this.recipes[index];
     }
 
