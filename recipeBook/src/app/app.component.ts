@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Ingredient } from '../app/Shared/ingredient.model'
 import { AuthService } from './auth/auth.service';
+import { DataStorageService } from './Shared/data-storage.service';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +10,7 @@ import { AuthService } from './auth/auth.service';
 })
 export class AppComponent implements OnInit{
 
-  constructor(private authService: AuthService){}
+  constructor(private authService: AuthService, private dSService: DataStorageService){}
 
   ngOnInit(){
     this.authService.autoLogin();

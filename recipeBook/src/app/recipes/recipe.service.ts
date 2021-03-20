@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams, HttpRequest } from '@angular/common/http';
 import {  Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { DataStorageService } from '../Shared/data-storage.service';
 import { Ingredient } from '../Shared/ingredient.model';
 import { ShoppingListService } from '../shopping-list/shopping-list.service';
 import { Recipe } from './recipe.model';
@@ -12,7 +13,7 @@ export class RecipeService {
     private ingredient: Ingredient[];
 
     private recipes: Recipe[] = [];
-    constructor(private slService: ShoppingListService, private http: HttpClient) {
+    constructor(private slService: ShoppingListService, private http: HttpClient, private dsService: DataStorageService) {
     }
 
     setRecipes(recipes: Recipe[]){
@@ -23,16 +24,48 @@ export class RecipeService {
 
     
     getRecipes(currentPage: number){
+        let length;
         this.ingredient = this.slService.getIngredients();
-        let ingredientArray: any[] = [];
-        for(let j= 0; j < this.ingredient.length; j++){
-            ingredientArray[j] = this.ingredient[j].name
+        if(this.ingredient.length == 0){
+             this.http
+            .get('https://wdd430-cf305.firebaseio.com/pantryItems.json').subscribe(
+                // success method
+                (ingredients: any[] ) => {
+                  let ingredientString = JSON.stringify(ingredients);
+                  let parse = JSON.parse(ingredientString);
+                  length = parse.length
+                  for(let i = 0; i < length; i++){
+                    this.ingredient[i] = ({
+                        name: parse[i].name,
+                        amount: parse[i].amount
+                    }); 
+
+                    this.slService.ingredientsChanged.next(this.ingredient.slice()); 
+                  }     
+              },
+                // error method
+                (error: any) => {
+                   console.log(error);
+                });
         }
-        const queryParams = `?i=${ingredientArray}&page=${currentPage}`;
+
+        // let ingredientArray: any[] = [];
+
+        // console.log(this.ingredient) 
+
+        // for(let j= 0; j < 10; j++){
+        //     console.log('here1')
+        //     console.log(this.ingredient[j])
+        //     ingredientArray[j] = this.ingredient[j].name
+        //     console.log(ingredientArray[j])
+        // }
+        console.log(this.ingredient)
+        const queryParams = `?i=${this.ingredient}&page=${currentPage}`;
         return this.http
         .get('http://localhost:3000/recipes/' + queryParams).subscribe(
             // success method
             (recipes: any[] ) => {
+                console.log('http://localhost:3000/recipes/' + queryParams);
               let recipeString = JSON.stringify(recipes);
               let parse = JSON.parse(recipeString);
               for(let i = 0; i < 10; i++){

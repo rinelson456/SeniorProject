@@ -4,6 +4,9 @@ import { catchError, tap } from "rxjs/operators";
 import { BehaviorSubject, throwError } from "rxjs";
 import { User } from "./user.model";
 import { Router } from "@angular/router";
+import { Ingredient } from "../Shared/ingredient.model";
+import { ShoppingListService } from "../shopping-list/shopping-list.service";
+import { DataStorageService } from "../Shared/data-storage.service";
 
 export interface AuthResponseData {
     kind: string;
@@ -20,7 +23,7 @@ export class AuthService {
     user = new BehaviorSubject<User>(null);
     private tokenTimer: any;
 
-    constructor(private http: HttpClient, private router: Router){}
+    constructor(private http: HttpClient, private router: Router, private slService: ShoppingListService){}
 
     signup(email: string, password: string){
         console.log(password);
@@ -85,7 +88,7 @@ export class AuthService {
     }
 
     private HandleAuthentication(email: string, userId: string, token: string, expiresIn: number){
-        const expirationDate = new Date(new Date().getTime() + expiresIn * 1000000000000);
+        const expirationDate = new Date(new Date().getTime() + expiresIn * 10000000000000);
         const user = new User(email, userId, token, expirationDate);
         this.user.next(user);
         this.autoLogout(expiresIn * 1000);

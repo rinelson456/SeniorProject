@@ -1,13 +1,20 @@
 
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { DataStorageService } from '../Shared/data-storage.service';
 
 import { Ingredient } from '../Shared/ingredient.model';
 
-export class ShoppingListService {
+@Injectable()
+
+export class ShoppingListService{
     startedEditing = new Subject<number>();
     ingredientsChanged = new Subject<Ingredient[]>();
-    private ingredients: Ingredient[] = [ new Ingredient('Apples', 5),
-    new Ingredient('Tomatoes', 15)];
+    private ingredients: Ingredient[] = [];
+
+    constructor(private http: HttpClient){}
 
     getIngredients(){
         return this.ingredients.slice();
@@ -40,7 +47,6 @@ export class ShoppingListService {
 
     setIngredients(ingredients: Ingredient[]){
         this.ingredients = ingredients; 
-        console.log(this.ingredients)
         this.ingredientsChanged.next(this.ingredients.slice());
     }
      

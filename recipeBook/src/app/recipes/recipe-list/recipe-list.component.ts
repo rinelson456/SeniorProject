@@ -14,7 +14,7 @@ import { RecipeService } from '../recipe.service';
 export class RecipeListComponent implements OnInit, OnDestroy{
   recipes: Recipe[]= [];
   subscription: Subscription;
-  totalRecipes = 10000;
+  totalRecipes = 10;
   currentPage = 1;
   recipesPerPage = 10;
 
