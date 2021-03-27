@@ -21,7 +21,7 @@
                         "tsConfig": "tsconfig.app.json",
                         "aot": true,
                         "assets": [
-                            "src/favicon.ico",
+                            "src/assets/logo.png",
                             "src/assets"
                         ],
                         "styles": ["./node_modules/bootstrap/dist/css/bootstrap.min.css",
@@ -91,7 +91,7 @@
                         "styles": ["src/styles.css"],
                         "scripts": [],
                         "assets": [
-                            "src/favicon.ico",
+                            "src/assets/logo.png",
                             "src/assets"
                         ]
                     },
